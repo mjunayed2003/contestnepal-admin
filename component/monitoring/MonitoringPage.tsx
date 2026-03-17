@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Users, ThumbsUp, FileText, Trophy, AlertTriangle, UserPlus } from "lucide-react";
+import { Users, ThumbsUp, FileText, Trophy, AlertTriangle, UserPlus, Smartphone, Monitor } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -88,12 +88,13 @@ function StatusDot({ status }: { status: SystemStatusLevel }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function MonitoringPage() {
-  // Live stat counters
-  const [activeUsers, setActiveUsers]   = useState(89);
-  const [votesPerMin, setVotesPerMin]   = useState(23);
-  const [subsPerHour, setSubsPerHour]   = useState(7);
+  const [mobileUsers, setMobileUsers] = useState(54);
+  const [webUsers, setWebUsers]       = useState(35);
+  const [votesPerMin, setVotesPerMin] = useState(23);
+  const [subsPerHour, setSubsPerHour] = useState(7);
 
-  // Activity stream
+  const activeUsers = mobileUsers + webUsers;
+
   const [events, setEvents] = useState<ActivityEvent[]>(initialEvents);
   const nextId = useRef(100);
   const poolIndex = useRef(0);
@@ -101,7 +102,8 @@ export function MonitoringPage() {
   // Simulate live counter drift every 3s
   useEffect(() => {
     const t = setInterval(() => {
-      setActiveUsers((v) => Math.max(70, v + Math.floor(Math.random() * 5) - 2));
+      setMobileUsers((v) => Math.max(30, v + Math.floor(Math.random() * 5) - 2));
+      setWebUsers((v)    => Math.max(20, v + Math.floor(Math.random() * 4) - 2));
       setVotesPerMin((v) => Math.max(10, v + Math.floor(Math.random() * 5) - 2));
       setSubsPerHour((v) => Math.max(1,  v + Math.floor(Math.random() * 3) - 1));
     }, 3000);
@@ -115,7 +117,6 @@ export function MonitoringPage() {
       poolIndex.current += 1;
       const newEvent: ActivityEvent = { ...template, id: nextId.current++, time: "Just now", isNew: true };
       setEvents((prev) => {
-        // mark old "Just now" as "1s ago"
         const updated = prev.map((e) =>
           e.time === "Just now" ? { ...e, time: "5s ago", isNew: false } : e
         );
@@ -125,6 +126,9 @@ export function MonitoringPage() {
     return () => clearInterval(t);
   }, []);
 
+  const mobilePercent = Math.round((mobileUsers / activeUsers) * 100);
+  const webPercent    = 100 - mobilePercent;
+
   return (
     <div className="space-y-6">
 
@@ -133,7 +137,8 @@ export function MonitoringPage() {
 
       {/* ── Stat cards ── */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {/* Active Users */}
+
+        {/* Active Users — with mobile/web breakdown */}
         <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5">
           <div className="absolute left-0 right-0 top-0 h-[3px] rounded-t-xl bg-[#9B1C1C]" />
           <div className="flex items-start justify-between">
@@ -148,8 +153,35 @@ export function MonitoringPage() {
               Live
             </span>
           </div>
+
           <p className="mt-3 text-3xl font-bold text-gray-900">{activeUsers}</p>
           <p className="mt-0.5 text-sm text-gray-500">Active Users</p>
+
+          {/* Progress bar: mobile vs web */}
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 flex">
+            <div
+              className="h-full bg-violet-500 transition-all duration-700"
+              style={{ width: `${mobilePercent}%` }}
+            />
+            <div
+              className="h-full bg-blue-400 transition-all duration-700"
+              style={{ width: `${webPercent}%` }}
+            />
+          </div>
+
+          {/* Mobile / Web labels */}
+          <div className="mt-2.5 flex items-center justify-between">
+            <span className="flex items-center gap-1 text-xs text-gray-500">
+              <Smartphone className="h-3 w-3 text-violet-500" />
+              <span className="font-semibold text-gray-700">{mobileUsers}</span>
+              <span className="text-gray-400">Mobile</span>
+            </span>
+            <span className="flex items-center gap-1 text-xs text-gray-500">
+              <Monitor className="h-3 w-3 text-blue-400" />
+              <span className="font-semibold text-gray-700">{webUsers}</span>
+              <span className="text-gray-400">Web</span>
+            </span>
+          </div>
         </div>
 
         {/* Votes / Minute */}

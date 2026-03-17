@@ -274,14 +274,6 @@ export function SubmissionsPage() {
             className="flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-600 transition-colors">
             <Check className="h-3.5 w-3.5" strokeWidth={3} /> Approve All
           </button>
-          <button onClick={bulkReject}
-            className="flex items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 transition-colors">
-            <X className="h-3.5 w-3.5" strokeWidth={3} /> Reject All
-          </button>
-          <button onClick={deselectAll}
-            className="text-xs text-gray-500 hover:text-gray-700 underline">
-            Clear
-          </button>
         </div>
       )}
 
