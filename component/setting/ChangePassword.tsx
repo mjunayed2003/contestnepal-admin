@@ -10,11 +10,14 @@ interface Props {
 }
 
 export function ChangePassword({ onBack }: Props) {
-  const [showConfirm, setShowConfirm] = useState(false);
   const [current, setCurrent] = useState("");
   const [newPw, setNewPw]     = useState("");
   const [confirm, setConfirm] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew]         = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   function handleSubmit() {
     if (newPw && newPw === confirm) {
@@ -24,10 +27,10 @@ export function ChangePassword({ onBack }: Props) {
     }
   }
 
-  const fields = [
-    { label: "Current Password", value: current, onChange: setCurrent, show: true,        toggle: undefined },
-    { label: "New Password",      value: newPw,   onChange: setNewPw,   show: true,        toggle: undefined },
-    { label: "Confirm Password",  value: confirm, onChange: setConfirm, show: showConfirm, toggle: () => setShowConfirm((v) => !v) },
+  const fields =[
+    { label: "Current Password", value: current, onChange: setCurrent, show: showCurrent, toggle: () => setShowCurrent((v) => !v) },
+    { label: "New Password",     value: newPw,   onChange: setNewPw,   show: showNew,     toggle: () => setShowNew((v) => !v) },
+    { label: "Confirm Password", value: confirm, onChange: setConfirm, show: showConfirm, toggle: () => setShowConfirm((v) => !v) },
   ];
 
   return (
@@ -40,12 +43,7 @@ export function ChangePassword({ onBack }: Props) {
       */}
       <div className="relative overflow-hidden rounded-2xl bg-gray-100 min-h-[520px] flex items-center justify-center">
 
-        {/*
-          TOP-RIGHT blob
-          Design specs: width 541px, height 1044px, top 394px, left -155px, angle -137.53deg
-          Translated to CSS: positioned at top-right corner
-          The SVG viewBox is 803×391 — we scale it via width/height
-        */}
+        {/* TOP-RIGHT blob */}
         <div
           className="pointer-events-none absolute"
           style={{
@@ -60,9 +58,7 @@ export function ChangePassword({ onBack }: Props) {
           <CornerBlob className="w-full h-full" />
         </div>
 
-        {/*
-          BOTTOM-LEFT blob — same shape, mirrored (rotate opposite)
-        */}
+        {/* BOTTOM-LEFT blob */}
         <div
           className="pointer-events-none absolute"
           style={{
@@ -87,34 +83,33 @@ export function ChangePassword({ onBack }: Props) {
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             {fields.map(({ label, value, onChange, show, toggle }) => (
               <div key={label} className="relative">
-                <label className="absolute -top-2 left-3 bg-white px-1 text-[11px] text-gray-400">
+                <label className="absolute -top-2.5 left-3 z-10 bg-white px-1.5 text-xs font-medium text-gray-500">
                   {label}
                 </label>
-                <div className="relative">
-                  <input
-                    type={show ? "text" : "password"}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#9B1C1C]/40"
-                  />
-                  {toggle && (
-                    <button
-                      onClick={toggle}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  )}
-                </div>
+                
+                <input
+                  type={show ? "text" : "password"}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-[#9B1C1C] focus:ring-1 focus:ring-[#9B1C1C]/40 transition-colors"
+                />
+                
+                <button
+                  type="button"
+                  onClick={toggle}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             ))}
 
             <button
               onClick={handleSubmit}
-              className="mt-2 w-full rounded-lg bg-[#9B1C1C] py-3 text-sm font-semibold text-white hover:bg-[#7f1515] transition-colors"
+              className="mt-4 w-full rounded-lg bg-[#9B1C1C] py-3 text-sm font-semibold text-white hover:bg-[#7f1515] transition-colors"
             >
               Confirm
             </button>

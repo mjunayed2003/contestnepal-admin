@@ -11,7 +11,6 @@ import {
   FileStack,
   Activity,
   BarChart3,
-  HeadphonesIcon,
   FileText,
   Settings,
   LogOut,
@@ -32,7 +31,6 @@ const menuItems = [
   {
     label: "Other",
     items: [
-      { href: "/support", label: "Support", icon: HeadphonesIcon },
       { href: "/report", label: "Report", icon: FileText },
       { href: "/setting", label: "Setting", icon: Settings },
     ],
