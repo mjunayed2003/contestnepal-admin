@@ -100,12 +100,6 @@ export function ContestsTable() {
 
         {/* Spacer */}
         <div className="flex-1" />
-
-        {/* New Contest */}
-        <button className="flex h-10 items-center gap-2 rounded-lg bg-[#9B1C1C] px-4 text-sm font-semibold text-white hover:bg-[#7f1515] transition-colors">
-          <Plus className="h-4 w-4" />
-          New Contest
-        </button>
       </div>
 
       {/* ── Stat Cards ── */}
